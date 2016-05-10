@@ -1,7 +1,7 @@
 {
-  "name": "redux-thunk",
+  "name": "redux-thunk-fsa",
   "version": "2.0.1",
-  "description": "Thunk middleware for Redux.",
+  "description": "FSA compliant thunk middleware for Redux.",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
   "files": [
@@ -32,14 +32,18 @@
     "thunk",
     "middleware",
     "redux-middleware",
-    "flux"
+    "flux",
+    "fsa"
   ],
   "author": "Dan Abramov <dan.abramov@me.com>",
+  "contributors": [
+    "Vitaly Aminev <v@makeomatic.ru>"
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.6.5",
     "babel-core": "^6.6.5",
-    "babel-eslint": "^5.0.0-beta4",
+    "babel-eslint": "^6.0.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-check-es2015-constants": "^6.6.5",
     "babel-plugin-transform-es2015-arrow-functions": "^6.5.2",
@@ -61,13 +65,19 @@
     "babel-plugin-transform-es2015-unicode-regex": "^6.5.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.5.0",
     "babel-plugin-transform-es3-property-literals": "^6.5.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "chai": "^3.2.0",
     "cross-env": "^1.0.7",
-    "eslint": "^1.10.2",
-    "eslint-config-airbnb": "1.0.2",
-    "eslint-plugin-react": "^4.1.0",
+    "eslint": "^2.0.0",
+    "eslint-config-airbnb": "^9.0.0",
+    "eslint-plugin-import": "^1.7.0",
+    "eslint-plugin-jsx-a11y": "^1.2.0",
+    "eslint-plugin-react": "^5.0.0",
     "mocha": "^2.2.5",
     "rimraf": "^2.5.2",
     "webpack": "^1.12.14"
+  },
+  "dependencies": {
+    "flux-standard-action": "^0.6.1"
   }
 }

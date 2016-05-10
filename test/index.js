@@ -4,7 +4,8 @@ import thunkMiddleware from '../src/index';
 describe('thunk middleware', () => {
   const doDispatch = () => {};
   const doGetState = () => {};
-  const nextHandler = thunkMiddleware({dispatch: doDispatch, getState: doGetState});
+  const type = 'FSA';
+  const nextHandler = thunkMiddleware({ dispatch: doDispatch, getState: doGetState });
 
   it('must return a function to handle next', () => {
     chai.assert.isFunction(nextHandler);
@@ -27,6 +28,24 @@ describe('thunk middleware', () => {
           chai.assert.strictEqual(dispatch, doDispatch);
           chai.assert.strictEqual(getState, doGetState);
           done();
+        });
+      });
+
+      it('must run the given FSA action with dispatch and getState', done => {
+        const actionObj = {};
+        const actionHandler = nextHandler(action => {
+          chai.assert.strictEqual(action.type, type);
+          chai.assert.strictEqual(action.payload, actionObj);
+          done();
+        });
+
+        actionHandler({
+          type,
+          payload: (dispatch, getState) => {
+            chai.assert.strictEqual(dispatch, doDispatch);
+            chai.assert.strictEqual(getState, doGetState);
+            return actionObj;
+          },
         });
       });
 
