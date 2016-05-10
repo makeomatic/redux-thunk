@@ -1,39 +1,55 @@
-Redux Thunk
+Redux Thunk FSA
 =============
 
 Thunk [middleware](http://redux.js.org/docs/advanced/Middleware.html) for Redux.
 
-[![build status](https://img.shields.io/travis/gaearon/redux-thunk/master.svg?style=flat-square)](https://travis-ci.org/gaearon/redux-thunk) 
-[![npm version](https://img.shields.io/npm/v/redux-thunk.svg?style=flat-square)](https://www.npmjs.com/package/redux-thunk)
-[![npm downloads](https://img.shields.io/npm/dm/redux-thunk.svg?style=flat-square)](https://www.npmjs.com/package/redux-thunk)
+[![npm version](https://img.shields.io/npm/v/redux-thunk-fsa.svg?style=flat-square)](https://www.npmjs.com/package/redux-thunk-fsa)
+[![npm downloads](https://img.shields.io/npm/dm/redux-thunk-fsa.svg?style=flat-square)](https://www.npmjs.com/package/redux-thunk-fsa)
 
 ```js
-npm install --save redux-thunk
+npm install --save redux-thunk-fsa
 ```
 
-## Note on 2.x Update
-
-Most tutorials today assume Redux Thunk 1.x so you might run into an issue when running their code with 2.x.  
-**If you use Redux Thunk 2.x in CommonJS environment, [don’t forget to add `.default` to your import](https://github.com/gaearon/redux-thunk/releases/tag/v2.0.0):**
+## Note on 3.x Update
 
 ```diff
-- var ReduxThunk = require('redux-thunk')
-+ var ReduxThunk = require('redux-thunk').default
+- import ReduxThunk from `redux-thunk`;
++ import ReduxThunk from `redux-thunk-fsa`;
 ```
 
-If you used ES modules, you’re already all good:
+Most importantly it adds support to FSA compliant actions. Consider the following example:
 
 ```js
-import ReduxThunk from 'redux-thunk' // no changes here 😀
+const LOADING = 'INCREMENT/LOADING';
+const INCREMENT = 'INCREMENT/+';
+
+function increment() {
+  return {
+    type: INCREMENT_COUNTER
+  };
+}
+
+function loading() {
+  return {
+    type: LOADING
+  };
+}
+
+function incrementAsync() {
+  return {
+    type: INCREMENT,
+    payload: dispatch => {
+      // sync increment
+      dispatch(loading());
+      // async increment
+      return Promise.resolve(10);
+    }
+  };
+}
 ```
 
-Additionally, since 2.x, we also support a [UMD build](https://npmcdn.com/redux-thunk@2.0.1/dist/redux-thunk.min.js):
-
-```js
-var ReduxThunk = window.ReduxThunk.default
-```
-
-As you can see, it also requires `.default` at the end.
+Normally this wouldn't be handled, but in conjunction with https://github.com/acdlite/redux-promise it allows you to create useful
+side-effects without too much hassle. It will eventually call action increment with payload 10 - and at this point you can handle it.
 
 ## Why Do I Need This?
 
@@ -101,7 +117,7 @@ let foo = () => 1 + 2;
 ## Installation
 
 ```
-npm install --save redux-thunk
+npm install --save redux-thunk-fsa
 ```
 
 Then, to enable Redux Thunk, use [`applyMiddleware()`](http://redux.js.org/docs/api/applyMiddleware.html):
@@ -124,7 +140,7 @@ Any return value from the inner function will be available as the return value o
 
 ```js
 import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import thunk from 'redux-thunk-fsa';
 import rootReducer from './reducers';
 
 // Note: this API requires redux@>=3.1.0
