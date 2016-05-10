@@ -1,6 +1,6 @@
 {
   "name": "redux-thunk-fsa",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "FSA compliant thunk middleware for Redux.",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
@@ -24,9 +24,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gaearon/redux-thunk.git"
+    "url": "https://github.com/makeomatic/redux-thunk.git"
   },
-  "homepage": "https://github.com/gaearon/redux-thunk",
+  "homepage": "https://github.com/makeomatic/redux-thunk",
   "keywords": [
     "redux",
     "thunk",
