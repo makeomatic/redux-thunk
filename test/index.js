@@ -86,6 +86,21 @@ describe('thunk middleware', () => {
     });
   });
 
+  describe('withExtraArgument', () => {
+    it('must pass the third argument', done => {
+      const extraArg = { lol: true };
+      thunkMiddleware.withExtraArgument(extraArg)({
+        dispatch: doDispatch,
+        getState: doGetState,
+      })()((dispatch, getState, arg) => {
+        chai.assert.strictEqual(dispatch, doDispatch);
+        chai.assert.strictEqual(getState, doGetState);
+        chai.assert.strictEqual(arg, extraArg);
+        done();
+      });
+    });
+  });
+
   describe('handle errors', () => {
     it('must throw if argument is non-object', done => {
       try {
