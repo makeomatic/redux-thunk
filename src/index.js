@@ -4,17 +4,20 @@ function isFunction(fn) {
   return typeof fn === 'function';
 }
 
-function createThunkMiddleware(extraArgument) {
-  return ({ dispatch, getState }) => next => action => {
+function createThunkMiddleware(opts = {}) {
+  return ({ dispatch, getState }) => next => function processAction(action) {
     if (isFunction(action)) {
-      return action(dispatch, getState, extraArgument);
+      const nextStep = action(dispatch, getState, opts.extraArgument);
+      return opts.next ? processAction(nextStep) : nextStep;
     }
 
     if (isFSA(action) && isFunction(action.payload)) {
-      return next({
-        ...action,
-        payload: action.payload(dispatch, getState, extraArgument),
-      });
+      const nextStep = action.payload(dispatch, getState, opts.extraArgument);
+      if (nextStep === null && opts.interrupt) {
+        return nextStep;
+      }
+
+      return next({ ...action, payload: nextStep });
     }
 
     return next(action);
@@ -23,5 +26,6 @@ function createThunkMiddleware(extraArgument) {
 
 const thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
+thunk.withOpts = createThunkMiddleware;
 
 export default thunk;

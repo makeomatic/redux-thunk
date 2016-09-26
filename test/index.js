@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import thunkMiddleware from '../src/index';
 
@@ -21,7 +22,7 @@ describe('thunk middleware', () => {
     });
 
     describe('handle action', () => {
-      it('must run the given action function with dispatch and getState', done => {
+      it('must run the given action function with dispatch and getState', (done) => {
         const actionHandler = nextHandler();
 
         actionHandler((dispatch, getState) => {
@@ -31,9 +32,9 @@ describe('thunk middleware', () => {
         });
       });
 
-      it('must run the given FSA action with dispatch and getState', done => {
+      it('must run the given FSA action with dispatch and getState', (done) => {
         const actionObj = {};
-        const actionHandler = nextHandler(action => {
+        const actionHandler = nextHandler((action) => {
           chai.assert.strictEqual(action.type, type);
           chai.assert.strictEqual(action.payload, actionObj);
           done();
@@ -49,10 +50,10 @@ describe('thunk middleware', () => {
         });
       });
 
-      it('must pass action to next if not a function', done => {
+      it('must pass action to next if not a function', (done) => {
         const actionObj = {};
 
-        const actionHandler = nextHandler(action => {
+        const actionHandler = nextHandler((action) => {
           chai.assert.strictEqual(action, actionObj);
           done();
         });
@@ -80,29 +81,29 @@ describe('thunk middleware', () => {
         const actionHandler = nextHandler();
         let mutated = 0;
 
-        actionHandler(() => mutated++);
+        actionHandler(() => (mutated += 1));
         chai.assert.strictEqual(mutated, 1);
       });
     });
   });
 
   describe('withExtraArgument', () => {
-    it('must pass the third argument', done => {
-      const extraArg = { lol: true };
-      thunkMiddleware.withExtraArgument(extraArg)({
+    it('must pass the third argument', (done) => {
+      const extraArgument = { lol: true };
+      thunkMiddleware.withOpts({ extraArgument })({
         dispatch: doDispatch,
         getState: doGetState,
       })()((dispatch, getState, arg) => {
         chai.assert.strictEqual(dispatch, doDispatch);
         chai.assert.strictEqual(getState, doGetState);
-        chai.assert.strictEqual(arg, extraArg);
+        chai.assert.strictEqual(arg, extraArgument);
         done();
       });
     });
   });
 
   describe('handle errors', () => {
-    it('must throw if argument is non-object', done => {
+    it('must throw if argument is non-object', (done) => {
       try {
         thunkMiddleware();
       } catch (err) {
