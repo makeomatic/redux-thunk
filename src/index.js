@@ -20,6 +20,11 @@ function createThunkMiddleware(opts = {}) {
       return next({ ...action, payload: nextStep });
     }
 
+    // do not pass on empty action
+    if (opts.interrupt && (action === null || action === undefined)) {
+      return action;
+    }
+
     return next(action);
   };
 }
