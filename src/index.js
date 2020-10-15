@@ -1,11 +1,22 @@
-import { isFSA } from 'flux-standard-action';
-
 function isFunction(fn) {
   return typeof fn === 'function';
 }
 
+function isValidKey(key) {
+  return ['type', 'payload', 'error', 'meta'].indexOf(key) > -1;
+}
+
+function isFSA(action) {
+  return (
+    action !== null
+    && typeof action === 'object'
+    && typeof action.type === 'string'
+    && Object.keys(action).every(isValidKey)
+  );
+}
+
 function createThunkMiddleware(opts = {}) {
-  return ({ dispatch, getState }) => next => function processAction(action) {
+  return ({ dispatch, getState }) => (next) => function processAction(action) {
     if (isFunction(action)) {
       const nextStep = action(dispatch, getState, opts.extraArgument);
       return opts.next ? processAction(nextStep) : nextStep;
@@ -30,7 +41,7 @@ function createThunkMiddleware(opts = {}) {
 }
 
 const thunk = createThunkMiddleware();
-thunk.withExtraArgument = createThunkMiddleware;
+thunk.withExtraArgument = (extraArgument) => createThunkMiddleware({ extraArgument });
 thunk.withOpts = createThunkMiddleware;
 
 export default thunk;

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
+import { checkDirectory } from 'typings-tester';
 import thunkMiddleware from '../src/index';
 
 describe('thunk middleware', () => {
@@ -81,7 +82,7 @@ describe('thunk middleware', () => {
         const actionHandler = nextHandler();
         let mutated = 0;
 
-        actionHandler(() => (mutated += 1));
+        actionHandler(() => { mutated += 1; });
         chai.assert.strictEqual(mutated, 1);
       });
     });
@@ -109,6 +110,42 @@ describe('thunk middleware', () => {
       } catch (err) {
         done();
       }
+    });
+  });
+
+  describe('withOpts | withExtraArgument', () => {
+    const extraArgument = { lol: true };
+
+    it('must pass the third argument [withOpts]', (done) => {
+      thunkMiddleware.withOpts({ extraArgument })({
+        dispatch: doDispatch,
+        getState: doGetState,
+      })()((dispatch, getState, arg) => {
+        chai.assert.strictEqual(dispatch, doDispatch);
+        chai.assert.strictEqual(getState, doGetState);
+        chai.assert.strictEqual(arg, extraArgument);
+        done();
+      });
+    });
+
+    it('withArgument', (done) => {
+      thunkMiddleware.withExtraArgument(extraArgument)({
+        dispatch: doDispatch,
+        getState: doGetState,
+      })()((dispatch, getState, arg) => {
+        chai.assert.strictEqual(dispatch, doDispatch);
+        chai.assert.strictEqual(getState, doGetState);
+        chai.assert.strictEqual(arg, extraArgument);
+        done();
+      });
+    });
+  });
+
+  describe('TypeScript definitions', function test() {
+    this.timeout(0);
+
+    it('should compile against index.d.ts', () => {
+      checkDirectory(__dirname);
     });
   });
 });
